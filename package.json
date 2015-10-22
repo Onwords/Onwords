@@ -15,7 +15,6 @@
   "bugs": {
     "url": "https://github.com/IrvingAxelB/Onwords/issues"
   },
-  "homepage": "https://github.com/IrvingAxelB/Onwords#readme",
   "dependencies": {
     "react-async": "^2.1.0",
     "react": "^0.13.3",
@@ -25,6 +24,5 @@
     "flux": "^2.1.1",
     "react-router-component": "^0.26.1",
     "gulp": "^3.9.0"
-
   }
 }

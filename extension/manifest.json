@@ -14,15 +14,15 @@
   "background": {
     "persistent": false,
     "scripts": [
-      "auth.js"
+      "js/auth.js"
     ]
   },
 
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["dependencies/jquery/dist/jquery.min.js", "annotator-original.js", "dist/js/main.js", "test.js"],
-      "css": ["annotator.css","onwords.css"]
+      "js": ["annotator-original.js",  "dependencies/jquery/dist/jquery.min.js", "dist/js/main.js", "dist/js/test.js"],
+      "css": ["style/onwords.css"]
     }
   ],
 
