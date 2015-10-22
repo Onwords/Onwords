@@ -1,17 +1,16 @@
 function fetchToken() {
-  debugger;
-
   var access_token;
   var clientID = 'none';
   var redirectUri = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
 
   var options = {
     'interactive': true,
-    url: 'https://www.facebook.com/dialog/oauth?client_id=' + clientID + '&response_type=token&access_type=online&redirect_uri=' + encodeURIComponent(redirectUri) 
+    url: 'https://www.facebook.com/dialog/oauth?client_id=' + clientID + 
+         '&response_type=token&access_type=online&redirect_uri=' + encodeURIComponent(redirectUri) +
+         '&scope=email'
   }
 
   chrome.identity.launchWebAuthFlow(options, function(redirectUri) {
-    debugger;
 
     if (chrome.runtime.lastError) {
       console.log(new Error(chrome.runtime.lastError));
@@ -44,16 +43,26 @@ chrome.browserAction.onClicked.addListener(function() {
 
 function fetchFbProfile(accessToken) {
   var xhr = new XMLHttpRequest();
-  var url = 'https://graph.facebook.com/v2.5/me/?fields=id,name,picture&access_token=' + accessToken;
+  var url = 'https://graph.facebook.com/v2.5/me/?fields=id,name,picture,email&access_token=' + accessToken;
   xhr.open('GET', url, true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       var resp = JSON.parse(xhr.responseText);
       var profile = {};
-      profile.id = resp.id,
-      profile.name = resp.name,
-      profile.picUrl = resp.picture.data.url
+      profile.facebook_id = resp.id;
+      profile.full_name = resp.name;
+      profile.pic_url = resp.picture.data.url;
+      profile.email = resp.email;
+      sendFbProfile(profile);
     }
   }
   xhr.send();
-};
+}
+
+function sendFbProfile(data) {
+  var xhr = new XMLHttpRequest();
+  var url = 'https://onwords-test-server.herokuapp.com/api/users';
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify(data));
+}
