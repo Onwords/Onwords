@@ -1,0 +1,30 @@
+{
+  "name": "onwords",
+  "version": "1.0.0",
+  "description": "Article Annotator",
+  "main": "annotator-firebase.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IrvingAxelB/Onwords.git"
+  },
+  "author": "Irving",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IrvingAxelB/Onwords/issues"
+  },
+  "homepage": "https://github.com/IrvingAxelB/Onwords#readme",
+  "dependencies": {
+    "react-async": "^2.1.0",
+    "react": "^0.13.3",
+    "vinyl-source-stream": "^1.1.0",
+    "reactify": "^1.1.1",
+    "browserify": "^11.2.0",
+    "flux": "^2.1.1",
+    "react-router-component": "^0.26.1",
+    "gulp": "^3.9.0"
+
+  }
+}
