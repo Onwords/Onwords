@@ -14795,7 +14795,7 @@ Highlighter.prototype.drawAll = function (annotations) {
                 combined.forEach(function(item) {
                   if (!unique[item.id]) {
                     uniqueArr.push(item);
-                    unique[item.text] = item;
+                    unique[item.id] = item;
                   }
                 })
                 var sorted = sortAnnotations(uniqueArr);
@@ -14804,13 +14804,15 @@ Highlighter.prototype.drawAll = function (annotations) {
                 newObj[uri] = sorted;
                 chrome.storage.local.set(newObj);
                 console.log("annotations loaded", newObj[uri]);
-              } else {
+              } else if (!obj[uri] && now.length > 0) {
                 debugger;
                 var sorted = sortAnnotations(now);
                 var newObj = {};
                 newObj[uri] = sorted;
                 chrome.storage.local.set(newObj);
                 console.log("annotations loaded", newObj[uri]);
+              } else {
+                return;
               }
             })
 

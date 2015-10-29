@@ -20216,14 +20216,14 @@ var App = React.createClass({displayName: "App",
             this.setState({showFeedView: false});
             $('.annotation-sidebar').animate({right: -(565)}, duration);
             break;
-        case 'showFriendsAnnotations':
-            console.log('showFriendsAnnotations!!');
-            this.setState({showFriendsAnnotations: true});
-            this.setState({showAnnotatorButton: false});
-            this.setState({showAnnotatorView: false});
-            this.setState({showFeedView: false});
-            $('.annotation-sidebar').animate({right: -(300)}, 50);
-            break;
+        // case 'showFriendsAnnotations':
+        //     console.log('showFriendsAnnotations!!');
+        //     this.setState({showFriendsAnnotations: true});
+        //     this.setState({showAnnotatorButton: false});
+        //     this.setState({showAnnotatorView: false});
+        //     this.setState({showFeedView: false});
+        //     $('.annotation-sidebar').animate({right: -(300)}, 50);
+        //     break;
         case 'showAnnotatorView':
             this.setState({showFriendsAnnotations: true});
             this.setState({showAnnotatorButton: false});
@@ -20296,7 +20296,7 @@ var FriendsAnnotations = React.createClass({displayName: "FriendsAnnotations",
         uri: 'http://blogs.scientificamerican.com/guest-blog/presidential-candidates-who-believes-in-climate-change/',
         title: 'Presidential Candidates: Who Believes in Climate Change?',
         profPic: 'https://scontent-lax3-1.xx.fbcdn.net/hphotos-xpa1/t31.0-8/q87/s960x960/980347_10201703421134973_1425263140_o.jpg',
-        name: 'Irving Fuck',
+        name: 'Irving Barajas',
         user_id: '2'
       }
     }
@@ -20688,17 +20688,19 @@ var friendsAnnotationList = React.createClass({displayName: "friendsAnnotationLi
     var annotationList = annotations.map(function(annotation, index) {
       var user = annotation.user_id;
       console.log('INSIDE FRIEND ANNOTATION LIST: ', annotation.user_id);
-        return (
-          React.createElement("div", null, 
-            React.createElement("li", {className: "annotation"}, 
-              user.toString() === ownId ? 
-                React.createElement(AnnotationComment, {user: annotation.user_id, annotation: annotation, deleteAnn: self.deleteAnn})
-              : React.createElement(FriendAnnotationComment, {user: annotation.user, annotation: annotation})
-              
-            ), 
-            React.createElement("br", null)
+        if (friends[user]) {
+          return (
+            React.createElement("div", null, 
+              React.createElement("li", {className: "annotation"}, 
+                user.toString() === ownId ? 
+                  React.createElement(AnnotationComment, {user: annotation.user_id, annotation: annotation, deleteAnn: self.deleteAnn})
+                : React.createElement(FriendAnnotationComment, {user: annotation.user, annotation: annotation})
+                
+              ), 
+              React.createElement("br", null)
+            )
           )
-        )
+        }
     });
 
     return (
@@ -20816,24 +20818,26 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
       user = uri.substring(uri.indexOf('#')+1, uri.length - 11);
       uri = uri.substring(0, uri.length-13);
     } else {
-      uri = uri;
       user = window.localStorage.getItem('user_id');
+      uri = uri;
     }
     $.get('https://onwords-test-server.herokuapp.com/api/search/uri', {uri: targetUri})
       .done(function(data) {
         debugger;
+        var ownId = window.localStorage.getItem('user_id');
         var friends = {};
         for (var i = 0; i < data.rows.length; i++) {
           if (data.rows[i].user_id) {
-              if (data.rows[i].user_id.toString() === user) {
+              if (data.rows[i].user_id.toString() === user && data.rows[i].user_id.toString() !== ownId) {
+                friends[data.rows[i].user_id] = true;
+                friends[ownId] = false;
+              } else if (data.rows[i].user_id.toString() == ownId) {
                 friends[data.rows[i].user_id] = true;
               } else {
                 friends[data.rows[i].user_id] = false;
               }
           }
         }
-        var ownId = window.localStorage.getItem('user_id');
-        friends[ownId] = false;
         chrome.storage.local.get(uri, function(obj) {
           if (obj[uri]) {
             self.setState({annotations: obj[uri], friends: friends});
@@ -20845,7 +20849,8 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
 
 
     chrome.storage.onChanged.addListener(function(changes) {
-      console.log('chrome storage changed mothafucka')
+      debugger;
+      console.log('chrome storage changed mothafucka', changes);
         self.setState({annotations: changes[uri].newValue});
     })
   }
@@ -20963,6 +20968,9 @@ exports.annotate = function(event) {
   } else {
     targetUri = uri;
   }
+
+  chrome.storage.local.remove(targetUri);
+
 
   var pageUri = function() {
     return {

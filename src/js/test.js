@@ -8,6 +8,9 @@ exports.annotate = function(event) {
     targetUri = uri;
   }
 
+  chrome.storage.local.remove(targetUri);
+
+
   var pageUri = function() {
     return {
       beforeAnnotationCreated: function(ann) {
