@@ -13837,6 +13837,7 @@ var Editor = exports.Editor = Widget.extend({
                 self._onSaveClick(e);
             })
             .on("click." + NS, '.annotator-cancel', function (e) {
+              // debugger;
                 self._onCancelClick(e);
             })
             .on("mouseover." + NS, '.annotator-cancel', function (e) {
@@ -15766,7 +15767,6 @@ var Viewer = exports.Viewer = Widget.extend({
                     }
                 });
         }
-
         this.element
             .on("click." + NS, '.annotator-edit', function (e) {
                 self._onEditClick(e);
