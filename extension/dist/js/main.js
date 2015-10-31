@@ -20570,9 +20570,91 @@ module.exports = FeedSearchView;
 var React = require('react');
 
 var Settings = React.createClass({displayName: "Settings",
+<<<<<<< HEAD
+  getInitialState: function(){
+    return {
+      description: "Onwords!",
+      editPicUrl: false,
+      editUsername: false,
+      editDescription: false
+    }
+  },
+  componentWillMount: function(){
+    chrome.storage.sync.get('user',function(data){
+      this.setState({
+        pic_url: data.user.picUrl,
+        username: data.user.fullName,
+        description: data.user.description || 'OnWords  !!  '
+      });  
+      
+    }.bind(this));
+  },
+  updateServer: function(options){ 
+    return $.ajax({
+      url: "http://localhost:8000/api/users/update",
+      method: "post",
+      data: options,
+      dataType: 'json'
+  });
+    
+  },
+  handleSubmit: function(e){
+    if(e.charCode == 13) { 
+      
+      console.log('this is what is entered ',e.target.value)
+      switch (e.target.dataset.setting) {
+        case 'picUrl':
+          this.setState({
+            pic_url: e.target.value,
+            editPicUrl: false
+          }); 
+          break;
+        case 'username':
+          this.setState({
+            username: e.target.value,
+            editUsername: false
+          });
+          break;
+        case 'description':
+          this.setState({
+             description: e.target.value,
+             editDescription: false
+           });
+          break;
+      }
+    }
+  },
+  handleClick: function(e) {  
+    switch (e.target.dataset.setting) {
+      case 'pic':
+        console.log('pic was chosen');
+        this.setState({editPicUrl: true});
+        break;
+      case 'username':
+        console.log('username was chosen');
+        this.setState({editUsername: true});
+        break;
+      case 'description':
+        console.log('description was chosen');
+        this.setState({editDescription: true});
+        break;
+    }  
+  },
+=======
+>>>>>>> a9f16df0f4b893913455a307fa8bec2b897f2108
   render: function() {
     return (
       React.createElement("div", {className: "settings-view-container"}, 
+<<<<<<< HEAD
+        React.createElement("div", {className: "picture-settings"}, 
+          React.createElement("img", {id: "profile-pic", src: this.state.pic_url}), 
+          React.createElement("button", {type: "submit", onClick: this.handleClick}, 
+            React.createElement("img", {"data-setting": "pic", className: "settings-profile-edit-icon", src: "https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/edit-icon.png", alt: "profile pic"})
+          ), 
+          this.state.editPicUrl ? React.createElement("input", {type: "text", placeholder: this.state.pic_url, "data-setting": "picUrl", onKeyPress: this.handleSubmit}) : null
+        ), 
+=======
+>>>>>>> a9f16df0f4b893913455a307fa8bec2b897f2108
         React.createElement("div", {className: "username-settings"}, 
           "Username"
         ), 
