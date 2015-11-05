@@ -4,8 +4,8 @@ var test = require('./test');
 
 console.log('inside main');
 var renderComponents = function() {
-  $('body').append("<div class='annotation-sidebar'></div>");
-  $('.annotation-sidebar').append("<div id=scrollview></div>");
+  $('body').append("<div id='annotation-sidebar'></div>");
+  $('#annotation-sidebar').append("<div id=scrollview></div>");
 
   React.render(<App />, document.getElementById('scrollview'));
 };
@@ -26,7 +26,6 @@ var identityListener = function(changes) {
     window.localStorage.setItem('user_id', changes.user.newValue.id);
     renderComponents();
       test.annotate(userId);
-    chrome.storage.onChanged.removeListener(identityListener);
   }
 };
 

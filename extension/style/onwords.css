@@ -1,4 +1,29 @@
-.annotation-sidebar {
+/* Transition */
+/*.sidebar-enter {
+  opacity: 0.01;
+  transition: all .15s ease-in;
+  transform: translateX(300px);
+
+}
+
+.sidebar-enter.sidebar-enter-active {
+  transform: translateX(0px);
+  opacity: 1;
+}*/
+
+.sidebar-leave {
+  opacity: 1;
+  transition: all .15s ease-in;
+  transform: translateX(0px);
+}
+
+.sidebar-leave.sidebar-leave-active {
+  opacity: 0.01;
+  transform: translateX(300px);
+}
+
+
+#annotation-sidebar {
   z-index: 10000;
   position: fixed; 
   top: 0; 
@@ -36,6 +61,7 @@
   height: 700px;
 }
 .annotator-buttons-container {
+  z-index: 10000;
   width: 300px;
   height: 38px;
 }
@@ -319,7 +345,9 @@
 }
 .annotation {
   background: #fbfbfb;
-  height: 150px;
+  min-height: 75px;
+  max-height: 300px;
+  overflow: scroll;
   padding-bottom: 10px;
   border-right:1px solid #e6e6e6;
   border-top:1px solid #e6e6e6;

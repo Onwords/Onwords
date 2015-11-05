@@ -31,21 +31,27 @@ function fetchToken() {
 
     chrome.storage.sync.set({'access_token': access_token});
   });
-}
+};
 
-
-  chrome.storage.sync.clear();
-  chrome.storage.local.clear();
 
 chrome.browserAction.onClicked.addListener(function() {
   debugger;
   console.log('browserAction clicked');
   chrome.storage.sync.get('access_token', function(obj) {
+    debugger;
     if (!obj['access_token']) {
       fetchToken();
+    } else {
+      chrome.storage.sync.clear();
+      chrome.storage.local.clear();
+      chrome.tabs.query({active: true}, function(tabs) {
+        debugger;
+        chrome.tabs.sendMessage(tabs[0].id, {message: 'destroyApp'});
+      })
     }
   });
 });
+
 
 function fetchFbProfile(accessToken) {
   var xhr = new XMLHttpRequest();
@@ -68,7 +74,7 @@ function fetchFbProfile(accessToken) {
     }
   };
   xhr.send();
-}
+};
 
 function sendFbProfile(data) {
   debugger;
@@ -91,4 +97,4 @@ function sendFbProfile(data) {
     }
   };
   xhr.send(JSON.stringify(data));
-}
+};

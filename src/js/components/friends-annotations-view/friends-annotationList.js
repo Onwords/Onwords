@@ -1,4 +1,7 @@
 var React = require('react');
+var ReactAddons = require('react/addons');
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 var AnnotationComment = require('../annotator-view/annotationComment');
 var FriendAnnotationComment = require('./friends-annotationComment');
 
@@ -8,7 +11,8 @@ var friendsAnnotationList = React.createClass({
     return {
       annotations: [],
       spotlight: '',
-      spotlightOn: false
+      spotlightOn: false,
+      mounted: false
     }
   },
 
@@ -39,7 +43,7 @@ var friendsAnnotationList = React.createClass({
     debugger;
     $('html, body').animate({
       scrollTop: annotation.offsetTop - 200
-    }, 300);
+    }, 325);
 
     var newSpotlightColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color'); 
 
@@ -136,30 +140,40 @@ var friendsAnnotationList = React.createClass({
     var annotations = this.state.annotations;
     var self = this;
 
-    var annotationList = annotations.map(function(annotation, index) {
-      var user = annotation.user_id;
-      console.log('INSIDE FRIEND ANNOTATION LIST: ', annotation.user_id);
-        if (friends[user]) {
-          console.log('annotation is:', annotation);
-          return (
-            <div key={index}>
-              <li className="annotationListItem">
-                {user.toString() === ownId ? 
-                  <AnnotationComment clickHandler={self.clickHandler} user={annotation.user_id} annotation={annotation} deleteAnn={self.deleteAnn} />
-                : <FriendAnnotationComment spotlight={self.state.spotlight} clickHandler={self.clickHandler} user={annotation.user} annotation={annotation}/>
-                }
-              </li>
-              <br></br>
-            </div>
-          )
-        }
-    });
+
+      var annotationList = annotations.map(function(annotation, index) {
+        var user = annotation.user_id;
+        console.log('INSIDE FRIEND ANNOTATION LIST: ', annotation.user_id);
+          if (friends[user]) {
+            console.log('annotation is:', annotation);
+            return (
+              <div key={index}>
+                <li className="annotationListItem">
+                  {user.toString() === ownId ? 
+                    <AnnotationComment clickHandler={self.clickHandler} user={annotation.user_id} annotation={annotation} deleteAnn={self.deleteAnn} />
+                  : <FriendAnnotationComment spotlight={self.state.spotlight} clickHandler={self.clickHandler} user={annotation.user} annotation={annotation}/>
+                  }
+                </li>
+                <br></br>
+              </div>
+            )
+          }
+      });
+
 
     return (
-      <ul className="annotationList">
-        {annotationList}
-      </ul>
+      <div className="annotationList">
+
+          
+          {annotationList}
+
+
+      </div>
     )
+  },
+
+  componentDidMount: function() {
+
   }
 });
 

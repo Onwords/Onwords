@@ -1,4 +1,7 @@
 var React = require('react');
+var ReactAddons = require('react/addons');
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 var AnnotatorView = require('./annotator-view/annotator-view');
 var FeedView = require('./feed-view/feed-view');
 var AnnotatorButton = require('./annotator-view/annotator-button');
@@ -41,7 +44,7 @@ var App = React.createClass({
             this.setState({showAnnotatorButton: true});
             this.setState({showAnnotatorView: false});
             this.setState({showFeedView: false});
-            $('.annotation-sidebar').animate({right: -(565)}, duration);
+            $('#annotation-sidebar').animate({right: -(565)}, 200);
             this.setState({spotlight: ''});
             break;
         // case 'showFriendsAnnotations':
@@ -58,7 +61,7 @@ var App = React.createClass({
             this.setState({showAnnotatorButton: false});
             this.setState({showAnnotatorView: false});
             this.setState({showFeedView: false});
-            $('.annotation-sidebar').animate({right: -(300)}, 50);
+            $('#annotation-sidebar').animate({right: -(300)}, 100);
             break;
         case 'showFeedView':
             this.setState({showFriendsAnnotations: false});
@@ -66,7 +69,7 @@ var App = React.createClass({
             this.setState({showAnnotatorView: false});
             this.setState({showFeedView: true});
             this.setState({spotlight: ''});
-            $('.annotation-sidebar').animate({right: (0)}, duration);
+            $('#annotation-sidebar').animate({right: (0)}, duration);
             break;
         default:
             console.log('nothing happened')
@@ -104,7 +107,7 @@ var App = React.createClass({
 
     chrome.storage.onChanged.addListener(function(changes) {
       debugger;
-      if (changes[uri].newValue) {
+      if (changes[uri] && changes[uri].newValue !== undefined) {
         var newAnnotations = changes[uri].newValue;
         var oldAnnotations = self.state.annotations;
         var currentSpotlight = self.state.spotlight;
@@ -147,10 +150,13 @@ var App = React.createClass({
     debugger;
     return (
       <div className='app-container'>      
-        {this.state.showAnnotatorButton ? <AnnotatorButton updateView={this.updateView} /> : null}
+
+          {this.state.showAnnotatorButton ? <AnnotatorButton updateView={this.updateView} /> : null}
         {this.state.showAnnotatorView ? <AnnotatorView updateView={this.updateView} /> : null}
         {this.state.showFeedView ? <FeedView updateView={this.updateView} /> : null} 
-        {this.state.showFriendsAnnotations ? <FriendsAnnotations annotations={this.state.annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={this.updateView} /> : null} 
+
+          {this.state.showFriendsAnnotations ? <FriendsAnnotations annotations={this.state.annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={this.updateView} /> : null} 
+
       </div>
     );
   }
