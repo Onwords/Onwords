@@ -2,6 +2,7 @@ var React = require('react');
 
 var AnnotatorButton = React.createClass({
   handleClick: function() {
+    debugger;
     this.props.updateView('showAnnotatorView');
   },
   render: function() {

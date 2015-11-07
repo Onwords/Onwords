@@ -4,10 +4,10 @@ var test = require('./test');
 
 console.log('inside main');
 var renderComponents = function() {
-  $('body').append("<div class='annotation-sidebar'></div>");
-  $('.annotation-sidebar').append("<div id=scrollview></div>");
-
-  React.render(<App />, document.getElementById('scrollview'));
+  $('body').append("<div id='annotation-sidebar'></div>");
+  $('#annotation-sidebar').append("<div id='annotation-header'></div>")
+  $('#annotation-sidebar').append("<div id='annotation-scroll'></div>")
+  React.render(<App />, document.getElementById('annotation-scroll'));
 };
 
 var code = window.location.hash.substring(1);
@@ -17,20 +17,20 @@ if (code.substring(code.length - 11)) {
   userId = code.substring(0, code.length - 11);
 } 
 
-
-
-
 var identityListener = function(changes) {
   if (changes.user && changes.user.newValue) {
     debugger;
-    renderComponents();
-    test.annotate(changes.user.newValue.id);
+    if (!userId) {
+      userId = changes.user.newValue.id
+    }
     window.localStorage.setItem('user_id', changes.user.newValue.id);
-    chrome.storage.onChanged.removeListener(identityListener);
+    renderComponents();
+      test.annotate(userId);
   }
 };
 
 chrome.storage.sync.get('user', function(obj) {
+  debugger;
   if (obj.user) {
     if (!userId) {
       userId = obj.user.id;
@@ -39,6 +39,7 @@ chrome.storage.sync.get('user', function(obj) {
     renderComponents();
     test.annotate(userId);
   } else {
+    debugger;
     chrome.storage.onChanged.addListener(identityListener);
   }
 });

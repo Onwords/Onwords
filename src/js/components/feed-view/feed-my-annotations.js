@@ -14,15 +14,24 @@ var MyAnnotations = React.createClass({
     console.log('MyAnnotations - componentDidMount');
     var user = window.localStorage.user_id;
     var uri = window.location.href.split("?")[0];
-    var completeUri = 'https://onwords-test-server.herokuapp.com/api/search/users?user_id=' + user;
+    var completeUri = 'https://test2server.herokuapp.com/api/personalfeed?user_id=' + user;
     $.get(completeUri, function(result) {
       if (this.isMounted()) {
         this.setState({
-          info: result.rows
+          info: result
         });
       }
       console.log('MyAnnotations state:INFO = ', this.state.info);
     }.bind(this));
+
+    $(document).on('click', '.redirectLink', function(e) {
+      var url = $(this).attr('href');
+      window.open(url, '_blank');  
+    });
+  },
+  componentWillUnmount: function() {
+    console.log('MyAnnotationsLink - componentWillUnmount');
+    $(document).off();
   },
   render: function() {
     return (

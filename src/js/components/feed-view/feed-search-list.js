@@ -1,48 +1,72 @@
 var React = require('react');
+var FeedSearchFollowButton = require('./feed-search-follow-button');
 
 var FeedSearchList = React.createClass({
   getInitialState: function() {
     return {
-      results: []
+      results: [],
+      ownId: ''
     };
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var urlPrefix = 'https://onwords-test-server.herokuapp.com/api/users';
-  /*  // var ownId = window.localStorage.getItem('user_id');
-    // var userIdQS = '?user_id=' + ownId;
-    // var fullNameQS = '&full_name=' + this.props.fullName;
-    // var url = urlPrefix + userIdQS + fullNameQS;  */
-    var fullNameQS = '?full_name=' + nextProps.fullName;
-    var url = urlPrefix + fullNameQS;
     if (nextProps.fullName) {
-      $.get(url, function(data) {
-        this.setState({results: data.rows});
-      }.bind(this));
+      var url = 'https://test2server.herokuapp.com/api/search/users';
+      var ownId = window.localStorage.getItem('user_id');
+
+      var queryParameters = {
+        full_name: nextProps.fullName,
+        user_id: ownId
+      };
+
+      $.get(url, queryParameters)
+        .done(function(data) {
+          this.setState({results: data});
+        }.bind(this));
     }
+  },
+
+  handleFollowClick: function(personId) {
+    var url = 'https://test2server.herokuapp.com/api/users/follow';
+
+    var body = {
+      user_id: personId,
+      follower_id: this.props.ownId
+    };
+
+    $.post(url, body);
+  },
+
+  handleUnfollowClick: function(personId) {
+    var urlPrefix = 'https://test2server.herokuapp.com/api/users/unfollow';
+    var url = urlPrefix + '?user_id=' + personId +'&follower_id=' + this.props.ownId;
+
+    $.ajax({
+      method: "DELETE",
+      url: url
+    });
   },
 
   render: function() {
     var feedSearchResults = this.state.results.map(function(result, index) {
+      var personId = result.person_id;
       var picUrl = result.pic_url;
       var fullName = result.full_name;
-      var description = null;
-      if (description === null) {
-        description = "I am an annotator!";
-      }
-      // var isFollowing = result.isFollowing;
+      var isFollowing = result.is_following;
 
-      // var follow = <button className="feed-search-follow">Follow</button>;
-      // var following = <button className="feed-search-following">Following</button>;
-      // var editSettings = ;
       return (
         <li className="feed-search-result" key={index}>
           <div className="feed-search-img"><img src={picUrl} /></div>
           <div className="feed-search-name">{fullName}</div>
-          {/* {isFollowing ? follow : following} */}
+          <FeedSearchFollowButton
+           onFollowClick={this.handleFollowClick}
+           onUnfollowClick={this.handleUnfollowClick}
+           personId={personId}
+           isFollowing={isFollowing}
+           ownId={this.props.ownId} />
         </li>
       );
-    });
+    }.bind(this));
 
     return (
       <ul className='feed-search-results'>

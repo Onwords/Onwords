@@ -1,18 +1,55 @@
-.annotation-sidebar {
-  z-index: 10000;
+.annotationList-appear {
+  opacity: 0.7;
+  transform: translateY(-50px);
+}
+
+.annotationList-appear.annotationList-appear-active {
+  opacity: 1;
+  transition: opacity .1s ease-in;
+  transform: translateY(0px);
+}
+
+.feedview-leave {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.feedview-leave.feedview-leave-active {
+  opacity: 0.01;
+  transition: opacity .1s ease-in;
+  transform: translateY(500px);
+}
+
+#annotation-sidebar {
+  z-index: 9999999;
   position: fixed; 
   top: 0; 
-  width: 600px; 
-  right: -580px;  
+  width: 630px; 
+  right: -610px;  
   height: 100%; 
-  background: rgba(0, 0, 31, 0);
+  text-decoration: none;
+  list-style-type: none;
 }
+
+#annotation-header {
+  height: 38px;
+  background: rgb(42, 67, 83);
+  position: absolute;
+  left: 30px;
+  width: 0px;
+  border-top: 1px solid #e6e6e6;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+
+}
+
 #scrollview {
   color: black; 
 }
 /* React */
 .app-container {
-  background-color: rgb(233, 233, 233);
+  background: none;
+  margin-left: 29px;
 }
 .annotator-body-container {
   height: 1000px;
@@ -22,11 +59,15 @@
   margin-top: 7px;
   width: 25px;
   height: 25px;
+  position: absolute;
+  left: -15px;
 }
 .annotator-button {
   width: 25px;
   height: 25px;
 }
+
+
 
 /* Annotator View */
 .annotator-view-container {
@@ -34,6 +75,7 @@
   height: 700px;
 }
 .annotator-buttons-container {
+  z-index: 10000;
   width: 300px;
   height: 38px;
 }
@@ -119,10 +161,16 @@
 
 
   /* Feed View */
+.app-name {
+  /*color: rgb(152, 157, 164);*/
+  color: white;
+}
 .feed-view-container {
   width: 600px;
   height: 1000px;
   text-align: center;
+  /*background-color: rgb(42, 67, 83);*/
+  background-color: #fbfbfb;
 }
 .header-container {
   margin-bottom: 10px;
@@ -169,7 +217,6 @@
   display: inline-block;
   height: 800px;
   width: 595px;
-  border: 1px solid black;
 }
 /*ButtonContainer*/
 .button-container {
@@ -186,16 +233,28 @@
   height: 25px;
   width: 25px;
 }
+.feed-button:hover {
+  background-color: rgb(255, 61, 46);
+  border-radius: 3px;
+}
 
 /*Settings*/
-
+.settings-profile-edit-icon {
+  height: 16px;
+  width: 16px;
+}
+#profile-pic {
+  height:300px;
+  width:auto;
+  border-radius: 50%;
+  padding: 5px;
+}
 /*FeedMyAnnotations*/
 .feed-my-annotations-container {
   display: inline-block;
   height: 800px;
   width: 595px;
   overflow-y: scroll;
-  background-image: url('http://www.designbolts.com/wp-content/uploads/2013/02/Noise-Light-Grey-Tileable-Pattern-For-Website-Background.jpg');
 }
 .my-annotations-links-container {
   display: inline-block;
@@ -208,8 +267,16 @@
   height: 100px;
   width: 495px;
   margin: 15px 0px 15px 0px;
-  background-color: white;
-  border: 1px solid black;
+  /*background-color: rgb(92, 162, 190);  */
+  background-color: rgb(255, 255, 255);
+  
+  /*border: 1px solid;
+  border-color: #e5e6e9 #dfe0e4 #d0d1d5;*/
+  border-radius: 3px;
+}
+.redirectLink {
+  /*color: white;*/
+  color: rgb(39, 47, 50);
 }
 
 /*FriendsFeed*/
@@ -241,20 +308,19 @@
   width: 90px;
   height: 90px;
 }
-.feed-search-follow {
-  height: 1.5em;
-  width: 3em;
+.feed-search-following .following-text,
+.feed-search-following:hover .unfollow-text {
+  display: block
 }
-.feed-search-following {
-  height: 1.5em;
-  width: 3em;
+.feed-search-following .unfollow-text,
+.feed-search-following:hover .following-text {
+  display: none
+}
+.feed-search-following:hover {
+  background: red;
 }
 .feed-search-name {
   font-size: medium;
-}
-.annotationList {
-  height: 1000px;
-  overflow-y: scroll;
 }
 
 
@@ -264,6 +330,7 @@
   width: 300px;
   height: 700px;
   text-align: center;
+  overflow-y: scroll;
 }
 .friends-container {
   width: 300px;
@@ -271,7 +338,7 @@
   margin-top: 30px;
   margin-bottom: 10px;
   overflow-x: scroll;
-  background: rgba(235, 235, 235, 1);
+
 }
 .friends-pic {
   margin: 3px 5px 3px 5px;
@@ -281,16 +348,114 @@
   background-color: black;
   display: inline-block;
 }
+.friends-pic-container{
+  margin: 3px 5px 3px 5px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.friend-name {
+  visibility: hidden;
+}
 .redirectLink {
   z-index: 1000;
+}
+.friends-annotations-header {
+  z-index: 99999;
+  background: #fbfbfb;
+  border-top: 1px solid #e6e6e6;
+  border-left: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  position: fixed;
+}
+.annotation {
+  background: #fbfbfb;
+  min-height: 75px;
+  max-height: 300px;
+  overflow: scroll;
+  padding-bottom: 10px;
+  border-right:1px solid #e6e6e6;
+  border-top:1px solid #e6e6e6;
+  border-bottom:1px solid #e6e6e6;
+  overflow-x: visible;
+}
+.annotationList {
+  height: 1000px;
+  overflow-y: scroll;
+  margin-top: 126px;
+  margin-bottom: 25px;
+}
+ul {
+  list-style-type: none;
+}
+
+  /*FeedFriendsAnnotationsLink*/
+.feed-friends-annotations-container {
+  width: 600px;
+  height: 1000px;
+  text-align: left;
+  overflow-y: scroll;
+}
+.feed-friends-annotations-post {
+  width: 600px;
+  height: 150px;
+  /*text-align: center;*/
+  border-bottom: 1px solid black;
+}
+.post-pic-container {
+  width: 150px;
+  height: 150px;
+  float: left;
+}
+.post-pic {
+  width: 125px;
+  height: 125px;
+  margin-top: 12.5px;
+  margin-bottom: 12.5px; 
+  border-radius: 50%;
+}
+.post-body-container {
+  padding: 12.5px 0px 12.5px 0px;
+  float: right;
+  width: 450px;
+  height: 125px;
+}
+.post-header-container {
+  margin-top: 12.5px;
+  width: 450px;
+  /*height: 25px; */
+}
+.post-name-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+.post-time-container {
+  display: inline-block;
+}
+.post-title-container {
+  width: 450px;
+  /*height: 25px; */
+}
+.post-like-comment-container {
+  width: 450px;
+  /*height: 25px; */
+}
+.post-likes-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+.post-comments-container {
+  display: inline-block;
 }
 
 /*FriendsButtonsContainer*/
 .friends-annotations-buttons-container {
   width: 300px;
   height: 38px;
+  background: rgb(42, 67, 83);
 }
-.my-annoataions-button-container {
+.my-annotations-button-container {
   float: right;
   height: 25px;
   width: 25px;

@@ -32,33 +32,46 @@ function fetchToken() {
   });
 }
 
-chrome.storage.sync.clear();
-chrome.storage.local.clear();
+      chrome.storage.sync.clear();
+      chrome.storage.local.clear();
+
 
 chrome.browserAction.onClicked.addListener(function() {
+  debugger;
   console.log('browserAction clicked');
   chrome.storage.sync.get('access_token', function(obj) {
+    debugger;
     if (!obj['access_token']) {
       fetchToken();
+    } else {
+      // chrome.storage.sync.clear();
+      // chrome.storage.local.clear();
+      // chrome.tabs.query({active: true}, function(tabs) {
+      //   debugger;
+      //   chrome.tabs.sendMessage(tabs[0].id, {message: 'destroyApp'});
+      // })
     }
   });
 });
 
+
 function fetchFbProfile(accessToken) {
   var xhr = new XMLHttpRequest();
   var urlPrefix = 'https://graph.facebook.com/v2.5/me';
-  var urlFields = '?fields=id,name,email,picture.width(100).height(100)';
+  var urlFields = '?fields=id,name,email,picture.width(310).height(310)';
   var urlSignature = '&access_token=' + accessToken;
   var url = urlPrefix + urlFields + urlSignature;
   xhr.open('GET', url, true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       var resp = JSON.parse(xhr.responseText);
+      console.log('resp:', resp);
       var profile = {};
       profile.facebook_id = resp.id;
       profile.full_name = resp.name;
       profile.pic_url = resp.picture.data.url;
       profile.email = resp.email;
+      debugger;
       sendFbProfile(profile);
     }
   };
@@ -66,11 +79,13 @@ function fetchFbProfile(accessToken) {
 }
 
 function sendFbProfile(data) {
+  debugger;
   var xhr = new XMLHttpRequest();
-  var url = 'https://onwords-test-server.herokuapp.com/api/users';
+  var url = 'https://test2server.herokuapp.com/api/users';
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = function() {
+    debugger;
     if (xhr.readyState === 4 && xhr.status === 200) {
       var resp = JSON.parse(xhr.responseText);
       var user = {

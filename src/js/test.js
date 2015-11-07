@@ -16,7 +16,6 @@ exports.annotate = function(userId) {
       beforeAnnotationCreated: function(ann) {
         ann.uri = targetUri;
         ann.title = document.getElementsByTagName('title')[0].innerHTML || document.querySelector('meta[name="twitter:title"]').getAttribute("content");
-        // ann.description = null || document.querySelector('meta[name="twitter:description"]').getAttribute("content");
         ann.user_id = window.localStorage.getItem('user_id');
       }
     };
@@ -25,7 +24,7 @@ exports.annotate = function(userId) {
   var app = new annotator.App();
   app.include(annotator.ui.main)
     .include(annotator.storage.http, {
-      prefix: 'https://onwords-test-server.herokuapp.com',
+      prefix: 'https://test2server.herokuapp.com',
       urls: {
         create: '/api/annotations',
         update: '/api/annotations/{id}',
@@ -52,4 +51,15 @@ exports.annotate = function(userId) {
       user: e.detail.userId
     });
   });
+
+  chrome.runtime.onMessage.addListener(function(request) {
+    debugger;
+    if (request.message === 'destroyApp') {
+      document.body.removeChild(document.getElementById('annotation-sidebar'));
+      app.destroy();
+    }
+  });
 };
+
+
+

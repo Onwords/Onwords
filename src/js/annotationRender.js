@@ -18,6 +18,7 @@ var renderAnnotations = function() {
     annotationCreated: function(annotation) {
       console.log("annotation created:", annotation);
       chrome.storage.local.get(uri, function(obj) {
+        debugger;
         console.log('values before CREATING:', obj[uri])
         if (!obj[uri]) {
           obj[uri] = [];

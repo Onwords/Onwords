@@ -12327,7 +12327,7 @@ App.prototype.destroy = function () {
  * :rtype: Promise
  */
 App.prototype.runHook = function (name, args) {
-  debugger;
+  
     var results = [];
     for (var i = 0, len = this.modules.length; i < len; i++) {
         var mod = this.modules[i];
@@ -12977,7 +12977,7 @@ HttpStorage.prototype.setHeader = function (key, value) {
  * :rtype: jqXHR
  */
 HttpStorage.prototype._apiRequest = function (action, obj) {
-    //debugger;
+    //
     var id = obj && obj.id;
     var url = this._urlFor(action, id);
     var options = this._apiRequestOptions(action, obj);
@@ -13378,7 +13378,7 @@ StorageAdapter.prototype._cycle = function (
 
     return this.runHook(beforeEvent, [obj])
         .then(function () {
-          // debugger;
+          // 
             var safeCopy = $.extend(true, {}, obj);
             delete safeCopy._local;
 
@@ -13388,7 +13388,7 @@ StorageAdapter.prototype._cycle = function (
             return Promise.resolve(result);
         })
         .then(function (ret) {
-          // debugger;
+          // 
             // Empty obj without changing identity
             for (var k in obj) {
                 if (obj.hasOwnProperty(k)) {
@@ -13837,6 +13837,7 @@ var Editor = exports.Editor = Widget.extend({
                 self._onSaveClick(e);
             })
             .on("click." + NS, '.annotator-cancel', function (e) {
+              // 
                 self._onCancelClick(e);
             })
             .on("mouseover." + NS, '.annotator-cancel', function (e) {
@@ -14665,7 +14666,7 @@ var Promise = util.Promise;
 
 /////////////////////////////////////////////////////////////////////////////////
 var userColor = {};
-var colors = ['#FFCCCC', '#FFE5CC', '#FFFFCC', '#E5FFCC', '#CCFFCC', '#CCFFE5', '#CCFFFF', '#CCE5FF', '#CCCCFF', '#E5CCFF', '#FFCCFF', '#FFCCE5'];
+var colors = ['rgba(255,153,153, 0.25)', 'rgba(255,204,153, 0.25)', 'rgba(204,255,153, 0.25)', 'rgba(153,255,153, 0.25)', 'rgba(153,255,204, 0.25)', 'rgba(153,255,255, 0.25)', 'rgba(153,204,255, 0.25)', 'rgba(255,153,255, 0.25)', 'rgba(255,153,204, 0.25)'];
 // highlightRange wraps the DOM Nodes within the provided range with a highlight
 // element of the specified class and returns the highlight Elements.
 //
@@ -14674,7 +14675,7 @@ var colors = ['#FFCCCC', '#FFE5CC', '#FFFFCC', '#E5FFCC', '#CCFFCC', '#CCFFE5', 
 //
 // Returns an array of highlight Elements.
 function highlightRange(normedRange, cssClass, userId) {
-  debugger;
+  
     if (typeof cssClass === 'undefined' || cssClass === null) {
         cssClass = 'annotator-hl';
     }
@@ -14687,7 +14688,7 @@ function highlightRange(normedRange, cssClass, userId) {
     // but better than breaking table layouts.
 
 /////////////////////////////////////////////////////////////////////////////////
-    var index = Math.floor(Math.random() * 11);
+    var index = Math.floor(Math.random() * 9);
 
     if (!userColor[userId]) {
       userColor[userId] = colors[index];
@@ -14702,7 +14703,7 @@ function highlightRange(normedRange, cssClass, userId) {
         if (!white.test(node.nodeValue)) {
             var hl = global.document.createElement('span');
             hl.className = cssClass;
-            hl.style.background = userColor[userId];
+            hl.style.backgroundColor = userColor[userId];
             node.parentNode.replaceChild(hl, node);
             hl.appendChild(node);
             results.push(hl);
@@ -14793,7 +14794,7 @@ Highlighter.prototype.drawAll = function (annotations) {
               return arr;
             }
             
-            debugger;
+            
             var uri = window.location.href.split("?")[0];
             if (uri.substring(uri.length-11) === 'onwords1991') {
               uri = uri.substring(0, uri.length-13);
@@ -14802,7 +14803,7 @@ Highlighter.prototype.drawAll = function (annotations) {
             }
             chrome.storage.local.get(uri, function(obj) {
               if (obj[uri] && now.length > 0) {
-                debugger;
+                
                 var combined = obj[uri].concat(now);
                 var unique = {};
                 var uniqueArr = [];
@@ -14819,7 +14820,7 @@ Highlighter.prototype.drawAll = function (annotations) {
                 chrome.storage.local.set(newObj);
                 console.log("annotations loaded", newObj[uri]);
               } else if (!obj[uri] && now.length > 0) {
-                debugger;
+                
                 var sorted = sortAnnotations(now);
                 var newObj = {};
                 newObj[uri] = sorted;
@@ -14855,7 +14856,7 @@ Highlighter.prototype.drawAll = function (annotations) {
 //
 // Returns an Array of drawn highlight elements.
 Highlighter.prototype.draw = function (annotation) {
-  debugger;
+  
     var normedRanges = [];
 
     for (var i = 0, ilen = annotation.ranges.length; i < ilen; i++) {
@@ -14900,6 +14901,21 @@ Highlighter.prototype.draw = function (annotation) {
             .attr('data-annotation-id', annotation.id);
     }
 
+    $('.annotator-hl').unbind('click').bind('click', function(event) {
+      
+      var annotations = $(event.target)
+                    .parents('.annotator-hl')
+                    .addBack()
+                    .map(function (_, elem) {
+                        return $(elem).data("annotation");
+                    })
+                    .toArray();
+
+      var ev = new CustomEvent('spotlightAnnotation', {detail: {
+        targetAnnotation: annotations[0]
+      }});
+      document.dispatchEvent(ev);
+    })
 
     return annotation._local.highlights;
 };
@@ -14957,7 +14973,7 @@ exports.standalone = function standalone(element, options) {
         destroy: function () { widget.destroy(); },
         annotationsLoaded: function (anns) { widget.drawAll(anns); },
         annotationCreated: function (ann) { widget.draw(ann); },
-        annotationDeleted: function (ann) { widget.undraw(ann); },
+        // annotationDeleted: function (ann) { widget.undraw(ann); },
         annotationUpdated: function (ann) { widget.redraw(ann); }
     };
 };
@@ -15279,7 +15295,7 @@ function main(options) {
 
         annotationsLoaded: function (anns) { s.highlighter.drawAll(anns); },
         annotationCreated: function (ann) { s.highlighter.draw(ann); },
-        annotationDeleted: function (ann) { s.highlighter.undraw(ann); },
+        // annotationDeleted: function (ann) { s.highlighter.undraw(ann); },
         annotationUpdated: function (ann) { s.highlighter.redraw(ann); },
 
         beforeAnnotationCreated: function (annotation) {
@@ -15766,13 +15782,12 @@ var Viewer = exports.Viewer = Widget.extend({
                     }
                 });
         }
-
         this.element
             .on("click." + NS, '.annotator-edit', function (e) {
                 self._onEditClick(e);
             })
             .on("click." + NS, '.annotator-delete', function (e) {
-              // debugger;
+              // 
                 self._onDeleteClick(e);
             })
             .on("mouseenter." + NS, function () {

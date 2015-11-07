@@ -5,7 +5,7 @@
   "web_accessible_resources": [
     "annotator.css",
     "annotator.js",
-    "assets/*.png"
+    "assets/*"
   ],
 
   "browser_action": {
